@@ -36,6 +36,7 @@ const ListInfluencer = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [openAccountForm, setOpenAccountForm] = useState<number | null>(null);
+  const [warningMessage, setWarningMessage] = useState("");
   const [newAccount, setNewAccount] = useState({
     social_network: "",
     title: "",
@@ -160,7 +161,8 @@ const ListInfluencer = () => {
       resetNewAccount();
       setOpenAccountForm(null);
     } else {
-      setError("Failed to add social media account.");
+      setWarningMessage("Failed to add social media account."); // Set the warning message
+      setTimeout(() => setWarningMessage(""), 4000);
     }
   };
 
@@ -251,6 +253,14 @@ const ListInfluencer = () => {
       <h1 className="text-3xl font-bold text-gray-800 mb-6">
         List of Influencers
       </h1>
+
+      {/* Warning Message */}
+      {warningMessage && (
+        <div className="w-full max-w-4xl bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
+          {warningMessage}
+        </div>
+      )}
+
       <div className="w-full max-w-4xl bg-white shadow-md rounded-lg p-4 mb-6 flex flex-wrap gap-4 items-center">
         {/* Manager Dropdown */}
         <div className="flex-1">
