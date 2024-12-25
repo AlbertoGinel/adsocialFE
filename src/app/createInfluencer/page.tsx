@@ -60,65 +60,87 @@ export default function CreateInfluencer() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-start sm:justify-center min-h-screen bg-background p-4 sm:p-6">
-      <div className="w-full max-w-md">
-        <div className="flex justify-end mb-6">
-          <button
-            onClick={() => router.push("/listInfluencers")}
-            className="px-4 py-2 button hover:bg-secondary"
-          >
-            List Influencers
-          </button>
+    <div
+      className="min-h-screen p-4 flex flex-col items-center justify-start"
+      style={{
+        backgroundColor: "var(--background)",
+        color: "var(--foreground)",
+      }}
+    >
+      <div className="w-full flex justify-end mb-6">
+        <button
+          onClick={() => router.push("/listInfluencers")}
+          className="px-4 py-2 bg-primary text-white font-semibold rounded-md shadow-md hover:bg-primary-dark transition"
+        >
+          List Influencers
+        </button>
+      </div>
+
+      <h1
+        className="text-3xl font-bold mb-6 text-center"
+        style={{ color: "var(--foreground)" }}
+      >
+        Create New Influencer
+      </h1>
+
+      {message && (
+        <div
+          className="w-full p-4 mb-4"
+          style={{
+            backgroundColor: "var(--alert-bg)",
+            borderLeft: "4px solid var(--alert-border)",
+            color: "var(--alert-text)",
+          }}
+        >
+          {message}
+        </div>
+      )}
+
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-md p-6 rounded-lg shadow-md mt-4 sm:mt-8"
+        style={{
+          backgroundColor: "white",
+          borderColor: "var(--border-color)",
+        }}
+      >
+        <div className="mb-4">
+          <label htmlFor="first_name" className="block text-sm font-medium">
+            First Name
+          </label>
+          <input
+            type="text"
+            id="first_name"
+            name="first_name"
+            value={formData.first_name}
+            onChange={handleChange}
+            className="mt-1 block w-full px-4 py-2 border rounded-md focus:ring focus:border-primary"
+            required
+          />
         </div>
 
-        <h1 className="text-2xl font-bold mb-4 text-center sm:text-left">
-          Create New Influencer
-        </h1>
-        {message && (
-          <p className="mb-4 text-center text-foreground">{message}</p>
-        )}
-        <form
-          onSubmit={handleSubmit}
-          className="w-full p-6 rounded-lg shadow-md mt-4 sm:mt-8 bg-background"
+        <div className="mb-4">
+          <label htmlFor="last_name" className="block text-sm font-medium">
+            Last Name
+          </label>
+          <input
+            type="text"
+            id="last_name"
+            name="last_name"
+            value={formData.last_name}
+            onChange={handleChange}
+            className="mt-1 block w-full px-4 py-2 border rounded-md focus:ring focus:border-primary"
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="w-full px-4 py-2 bg-primary text-white font-semibold rounded-md shadow-md hover:bg-primary-dark transition"
         >
-          <div className="mb-4">
-            <label htmlFor="first_name" className="block text-sm font-medium">
-              First Name
-            </label>
-            <input
-              type="text"
-              id="first_name"
-              name="first_name"
-              value={formData.first_name}
-              onChange={handleChange}
-              className="mt-1 block w-full px-4 py-2 border rounded-md focus:ring focus:border-primary"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <label htmlFor="last_name" className="block text-sm font-medium">
-              Last Name
-            </label>
-            <input
-              type="text"
-              id="last_name"
-              name="last_name"
-              value={formData.last_name}
-              onChange={handleChange}
-              className="mt-1 block w-full px-4 py-2 border rounded-md focus:ring focus:border-primary"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="w-full button hover:bg-secondary focus:ring focus:ring-primary"
-          >
-            Create Influencer
-          </button>
-        </form>
-      </div>
+          Create Influencer
+        </button>
+      </form>
     </div>
   );
 }

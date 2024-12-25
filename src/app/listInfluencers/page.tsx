@@ -259,7 +259,7 @@ const ListInfluencer = () => {
         color: "var(--foreground)",
       }}
     >
-      <div className="w-full max-w-4xl flex justify-end mb-6">
+      <div className="w-full flex justify-end mb-6">
         <button
           onClick={() => router.push("/createInfluencer")}
           className="px-4 py-2 bg-primary text-white font-semibold rounded-md shadow-md hover:bg-primary-dark"
@@ -277,7 +277,7 @@ const ListInfluencer = () => {
 
       {warningMessage && (
         <div
-          className="w-full max-w-4xl p-4 mb-4"
+          className="w-full p-4 mb-4"
           style={{
             backgroundColor: "var(--alert-bg)",
             borderLeft: "4px solid var(--alert-border)",
@@ -289,7 +289,7 @@ const ListInfluencer = () => {
       )}
 
       <div
-        className="w-full max-w-4xl shadow-md rounded-lg p-4 mb-6 flex flex-col gap-4"
+        className="w-full shadow-md rounded-lg p-4 mb-6 flex flex-col gap-4 lg:flex-row"
         style={{
           backgroundColor: "white",
           borderColor: "var(--border-color)",
@@ -338,7 +338,6 @@ const ListInfluencer = () => {
         </div>
 
         <div className="flex gap-4 w-full">
-          {/* Manager Filter */}
           <div className="flex-1">
             <label
               htmlFor="filter-manager"
@@ -349,7 +348,7 @@ const ListInfluencer = () => {
             </label>
             <select
               id="filter-manager"
-              className="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-lg"
+              className="mt-1 block w-full rounded-md border-gray-100 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
               value={filters.manager ?? ""}
               onChange={(e) =>
                 setFilters({
@@ -366,18 +365,22 @@ const ListInfluencer = () => {
               ))}
             </select>
           </div>
-
-          {/* Filter and Clear Buttons */}
           <div className="flex-1 flex gap-4">
             <button
-              className="flex-1 px-4 py-2 bg-primary text-white font-semibold rounded-md shadow-md hover:bg-primary-dark"
+              className="flex-1 px-4 py-2 bg-primary text-white font-semibold rounded-md shadow-md hover:bg-primary-dark disabled:bg-gray-400 disabled:cursor-not-allowed"
               onClick={handleFilter}
+              disabled={
+                !filters.first_name && !filters.last_name && !filters.manager
+              }
             >
               Filter
             </button>
             <button
-              className="flex-1 px-4 py-2 bg-secondary text-white font-semibold rounded-md shadow-md hover:bg-secondary-dark"
+              className="flex-1 px-4 py-2 bg-secondary text-white font-semibold rounded-md shadow-md hover:bg-secondary-dark disabled:bg-gray-400 disabled:cursor-not-allowed"
               onClick={handleClear}
+              disabled={
+                !filters.first_name && !filters.last_name && !filters.manager
+              }
             >
               Clear
             </button>
@@ -398,7 +401,7 @@ const ListInfluencer = () => {
           No influencers found.
         </p>
       ) : (
-        <div className="w-full max-w-4xl space-y-6">
+        <div className="w-full space-y-6">
           {influencers.map((influencer) => (
             <InfluencerElement
               key={influencer.id}

@@ -24,31 +24,28 @@ const SocialMediaAccountElement: React.FC<SocialMediaAccountElementProps> = ({
   return (
     <li
       key={account.id}
-      className="flex justify-between items-center bg-background p-4 rounded-md shadow-md"
+      className="flex flex-row lg:justify-between lg:items-center bg-background p-4 rounded-md shadow-md"
     >
-      <div>
-        <p className="font-medium text-foreground">
-          <span className="capitalize">{account.social_network}:</span>{" "}
-          {account.title}
+      <div className="flex flex-col gap-4 lg:grid lg:grid-cols-3 lg:gap-4 lg:items-center text-foreground w-full">
+        <p className="font-medium capitalize">
+          {account.social_network}: {account.title}
         </p>
-        <p className="text-foreground text-sm">
-          Followers: {account.followers}
-        </p>
-        <p className="text-foreground text-sm">Username: {account.username}</p>
+        <p className="text-sm">Followers: {account.followers}</p>
+        <p className="text-sm">Username: {account.username}</p>
       </div>
-      <div className="flex items-center space-x-4">
+      <div className="flex flex-col lg:flex-row items-center justify-start gap-4 mt-4 lg:mt-0">
         {account.account_url && (
           <a
             href={account.account_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2 bg-primary text-white font-semibold rounded-md shadow-md hover:bg-primary-dark transition"
+            className="w-full flex items-center justify-center px-4 py-2 bg-primary text-white font-semibold rounded-md shadow-md hover:bg-primary-dark transition"
           >
             Visit
           </a>
         )}
         <button
-          className="px-4 py-2 bg-errorText text-white font-semibold rounded-md shadow-md hover:bg-errorText-dark transition"
+          className="w-full px-4 py-2 bg-errorText text-white font-semibold rounded-md shadow-md hover:bg-errorText-dark transition"
           onClick={() => confirmDelete(account.id)}
         >
           Delete

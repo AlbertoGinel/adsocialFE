@@ -129,7 +129,9 @@ const InfluencerElement: React.FC<InfluencerElementProps> = ({
       }}
     >
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div>
+        <div className="sm:w-1/2">
+          {" "}
+          {/* This makes the first part take up half the row on sm screens and above */}
           <h2
             className="text-xl font-semibold"
             style={{
@@ -140,9 +142,10 @@ const InfluencerElement: React.FC<InfluencerElementProps> = ({
           </h2>
         </div>
 
-        <div className="flex justify-between items-center gap-4 w-full">
-          {/* First div (3/4 of the space) */}
-          <div className="w-2/4">
+        <div className="flex justify-between items-center gap-4 w-full sm:w-1/2">
+          {" "}
+          {/* This makes the second part take up half of the row on sm screens */}
+          <div className="flex-1">
             <label
               htmlFor={`manager-select-${influencer.id}`}
               className="block text-sm font-medium"
@@ -153,7 +156,7 @@ const InfluencerElement: React.FC<InfluencerElementProps> = ({
             <select
               id={`manager-select-${influencer.id}`}
               value={influencer.manager || ""}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-lg"
+              className="mt-1 block w-full rounded-md border-gray-100 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
               onChange={handleManagerChange}
             >
               <option value="">No manager</option>
@@ -164,9 +167,7 @@ const InfluencerElement: React.FC<InfluencerElementProps> = ({
               ))}
             </select>
           </div>
-
-          {/* Second div (1/4 of the space) */}
-          <div className="w-2/4">
+          <div className="flex-1">
             <button
               className="w-full px-4 py-2 bg-primary text-white font-semibold rounded-md shadow-md hover:bg-primary-dark"
               onClick={() =>
