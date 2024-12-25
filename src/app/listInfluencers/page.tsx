@@ -35,6 +35,7 @@ const ListInfluencer = () => {
   const [influencers, setInfluencers] = useState<Influencer[]>([]);
   const [managers, setManagers] = useState<Manager[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingFilter, setLoadingFilter] = useState(true);
   const [error, setError] = useState("");
   const [openAccountForm, setOpenAccountForm] = useState<number | null>(null);
   const [warningMessage, setWarningMessage] = useState("");
@@ -45,8 +46,8 @@ const ListInfluencer = () => {
     account_url: "",
   });
   const [filters, setFilters] = useState({
-    first_name: "",
-    last_name: "",
+    first_name: transitionPayload.first_name || "",
+    last_name: transitionPayload.last_name || "",
     manager: null as number | null,
   });
 
@@ -55,22 +56,13 @@ const ListInfluencer = () => {
   useEffect(() => {
     fetchManagers();
 
-    let initialFilters = {
-      first_name: "",
-      last_name: "",
-      manager: null,
-    };
+    console.log(
+      transitionPayload.first_name + " " + transitionPayload.last_name
+    );
 
-    if (transitionPayload.first_name && transitionPayload.last_name) {
-      initialFilters = {
-        first_name: transitionPayload.first_name,
-        last_name: transitionPayload.last_name,
-        manager: null,
-      };
-    }
-
-    fetchInfluencers(initialFilters);
+    fetchInfluencers(filters);
     resetTransitionPayload();
+    setLoadingFilter(false);
   }, []);
 
   const fetchManagers = async () => {
@@ -288,105 +280,112 @@ const ListInfluencer = () => {
         </div>
       )}
 
-      <div
-        className="w-full shadow-md rounded-lg p-4 mb-6 flex flex-col gap-4 lg:flex-row"
-        style={{
-          backgroundColor: "white",
-          borderColor: "var(--border-color)",
-        }}
-      >
-        <div className="flex gap-4 w-full">
-          <div className="flex-1">
-            <label
-              htmlFor="filter-first-name"
-              className="block text-sm font-medium"
-              style={{ color: "var(--foreground)" }}
-            >
-              First Name
-            </label>
-            <input
-              id="filter-first-name"
-              type="text"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
-              placeholder="Enter first name"
-              value={filters.first_name}
-              onChange={(e) =>
-                setFilters({ ...filters, first_name: e.target.value })
-              }
-            />
+      {loadingFilter ? (
+        <p className="text-lg" style={{ color: "var(--foreground)" }}>
+          Loading...
+        </p>
+      ) : (
+        <div
+          className="w-full shadow-md rounded-lg p-4 mb-6 flex flex-col gap-4 lg:flex-row"
+          style={{
+            backgroundColor: "white",
+            borderColor: "var(--border-color)",
+          }}
+        >
+          <div className="flex gap-4 w-full">
+            {console.log("Second part loaded!")}
+            <div className="flex-1">
+              <label
+                htmlFor="filter-first-name"
+                className="block text-sm font-medium"
+                style={{ color: "var(--foreground)" }}
+              >
+                First Name
+              </label>
+              <input
+                id="filter-first-name"
+                type="text"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                placeholder="Enter first name"
+                value={filters.first_name}
+                onChange={(e) =>
+                  setFilters({ ...filters, first_name: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="flex-1">
+              <label
+                htmlFor="filter-last-name"
+                className="block text-sm font-medium"
+                style={{ color: "var(--foreground)" }}
+              >
+                Last Name
+              </label>
+              <input
+                id="filter-last-name"
+                type="text"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                placeholder="Enter last name"
+                value={filters.last_name}
+                onChange={(e) =>
+                  setFilters({ ...filters, last_name: e.target.value })
+                }
+              />
+            </div>
           </div>
 
-          <div className="flex-1">
-            <label
-              htmlFor="filter-last-name"
-              className="block text-sm font-medium"
-              style={{ color: "var(--foreground)" }}
-            >
-              Last Name
-            </label>
-            <input
-              id="filter-last-name"
-              type="text"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
-              placeholder="Enter last name"
-              value={filters.last_name}
-              onChange={(e) =>
-                setFilters({ ...filters, last_name: e.target.value })
-              }
-            />
+          <div className="flex gap-4 w-full">
+            <div className="flex-1">
+              <label
+                htmlFor="filter-manager"
+                className="block text-sm font-medium"
+                style={{ color: "var(--foreground)" }}
+              >
+                Manager
+              </label>
+              <select
+                id="filter-manager"
+                className="mt-1 block w-full rounded-md border-gray-100 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+                value={filters.manager ?? ""}
+                onChange={(e) =>
+                  setFilters({
+                    ...filters,
+                    manager: e.target.value ? Number(e.target.value) : null,
+                  })
+                }
+              >
+                <option value="">No manager selected</option>
+                {managers.map((manager) => (
+                  <option key={manager.id} value={manager.id}>
+                    {manager.first_name} {manager.last_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="flex-1 flex gap-4">
+              <button
+                className="flex-1 px-4 py-2 bg-primary text-white font-semibold rounded-md shadow-md hover:bg-primary-dark disabled:bg-gray-400 disabled:cursor-not-allowed"
+                onClick={handleFilter}
+                disabled={
+                  !filters.first_name && !filters.last_name && !filters.manager
+                }
+              >
+                Filter
+              </button>
+              <button
+                className="flex-1 px-4 py-2 bg-secondary text-white font-semibold rounded-md shadow-md hover:bg-secondary-dark disabled:bg-gray-400 disabled:cursor-not-allowed"
+                onClick={handleClear}
+                disabled={
+                  !filters.first_name && !filters.last_name && !filters.manager
+                }
+              >
+                Clear
+              </button>
+            </div>
           </div>
         </div>
-
-        <div className="flex gap-4 w-full">
-          <div className="flex-1">
-            <label
-              htmlFor="filter-manager"
-              className="block text-sm font-medium"
-              style={{ color: "var(--foreground)" }}
-            >
-              Manager
-            </label>
-            <select
-              id="filter-manager"
-              className="mt-1 block w-full rounded-md border-gray-100 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
-              value={filters.manager ?? ""}
-              onChange={(e) =>
-                setFilters({
-                  ...filters,
-                  manager: e.target.value ? Number(e.target.value) : null,
-                })
-              }
-            >
-              <option value="">No manager selected</option>
-              {managers.map((manager) => (
-                <option key={manager.id} value={manager.id}>
-                  {manager.first_name} {manager.last_name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="flex-1 flex gap-4">
-            <button
-              className="flex-1 px-4 py-2 bg-primary text-white font-semibold rounded-md shadow-md hover:bg-primary-dark disabled:bg-gray-400 disabled:cursor-not-allowed"
-              onClick={handleFilter}
-              disabled={
-                !filters.first_name && !filters.last_name && !filters.manager
-              }
-            >
-              Filter
-            </button>
-            <button
-              className="flex-1 px-4 py-2 bg-secondary text-white font-semibold rounded-md shadow-md hover:bg-secondary-dark disabled:bg-gray-400 disabled:cursor-not-allowed"
-              onClick={handleClear}
-              disabled={
-                !filters.first_name && !filters.last_name && !filters.manager
-              }
-            >
-              Clear
-            </button>
-          </div>
-        </div>
-      </div>
+      )}
 
       {loading ? (
         <p className="text-lg" style={{ color: "var(--foreground)" }}>
