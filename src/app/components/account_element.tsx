@@ -9,7 +9,7 @@ type SocialMediaAccount = {
   account_url: string;
   followers: number;
   influencer: number;
-  username: string; // Already included
+  username: string;
 };
 
 type SocialMediaAccountElementProps = {
@@ -24,17 +24,17 @@ const SocialMediaAccountElement: React.FC<SocialMediaAccountElementProps> = ({
   return (
     <li
       key={account.id}
-      className="flex justify-between items-center bg-gray-50 p-4 rounded-md shadow"
+      className="flex justify-between items-center bg-background p-4 rounded-md shadow-md"
     >
       <div>
-        <p className="font-medium text-gray-700">
+        <p className="font-medium text-foreground">
           <span className="capitalize">{account.social_network}:</span>{" "}
           {account.title}
         </p>
-        <p className="text-gray-500 text-sm">Followers: {account.followers}</p>
-        <p className="text-gray-500 text-sm">
-          Username: {account.username}
-        </p>{" "}
+        <p className="text-foreground text-sm">
+          Followers: {account.followers}
+        </p>
+        <p className="text-foreground text-sm">Username: {account.username}</p>
       </div>
       <div className="flex items-center space-x-4">
         {account.account_url && (
@@ -42,13 +42,13 @@ const SocialMediaAccountElement: React.FC<SocialMediaAccountElementProps> = ({
             href={account.account_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-indigo-600 hover:underline"
+            className="px-4 py-2 bg-primary text-white font-semibold rounded-md shadow-md hover:bg-primary-dark transition"
           >
             Visit
           </a>
         )}
         <button
-          className="text-red-600 hover:underline"
+          className="px-4 py-2 bg-errorText text-white font-semibold rounded-md shadow-md hover:bg-errorText-dark transition"
           onClick={() => confirmDelete(account.id)}
         >
           Delete

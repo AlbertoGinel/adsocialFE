@@ -12,7 +12,6 @@ export default function CreateInfluencer() {
     first_name: "",
     last_name: "",
   });
-
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -61,60 +60,65 @@ export default function CreateInfluencer() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">
-        Create New Influencer
-      </h1>
-
-      {message && <p className="mb-4 text-center text-gray-700">{message}</p>}
-
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-md bg-white p-6 rounded-lg shadow-md"
-      >
-        <div className="mb-4">
-          <label
-            htmlFor="first_name"
-            className="block text-sm font-medium text-gray-700"
+    <div className="flex flex-col items-center justify-start sm:justify-center min-h-screen bg-background p-4 sm:p-6">
+      <div className="w-full max-w-md">
+        <div className="flex justify-end mb-6">
+          <button
+            onClick={() => router.push("/listInfluencers")}
+            className="px-4 py-2 button hover:bg-secondary"
           >
-            First Name
-          </label>
-          <input
-            type="text"
-            id="first_name"
-            name="first_name"
-            value={formData.first_name}
-            onChange={handleChange}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-            required
-          />
+            List Influencers
+          </button>
         </div>
 
-        <div className="mb-4">
-          <label
-            htmlFor="last_name"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Last Name
-          </label>
-          <input
-            type="text"
-            id="last_name"
-            name="last_name"
-            value={formData.last_name}
-            onChange={handleChange}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
-            required
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500"
+        <h1 className="text-2xl font-bold mb-4 text-center sm:text-left">
+          Create New Influencer
+        </h1>
+        {message && (
+          <p className="mb-4 text-center text-foreground">{message}</p>
+        )}
+        <form
+          onSubmit={handleSubmit}
+          className="w-full p-6 rounded-lg shadow-md mt-4 sm:mt-8 bg-background"
         >
-          Create Influencer
-        </button>
-      </form>
+          <div className="mb-4">
+            <label htmlFor="first_name" className="block text-sm font-medium">
+              First Name
+            </label>
+            <input
+              type="text"
+              id="first_name"
+              name="first_name"
+              value={formData.first_name}
+              onChange={handleChange}
+              className="mt-1 block w-full px-4 py-2 border rounded-md focus:ring focus:border-primary"
+              required
+            />
+          </div>
+
+          <div className="mb-4">
+            <label htmlFor="last_name" className="block text-sm font-medium">
+              Last Name
+            </label>
+            <input
+              type="text"
+              id="last_name"
+              name="last_name"
+              value={formData.last_name}
+              onChange={handleChange}
+              className="mt-1 block w-full px-4 py-2 border rounded-md focus:ring focus:border-primary"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full button hover:bg-secondary focus:ring focus:ring-primary"
+          >
+            Create Influencer
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

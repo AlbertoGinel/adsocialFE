@@ -1,21 +1,43 @@
+/* styles/globals.css */
+
+/* Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer components {
+  .button {
+    @apply bg-primary text-white py-2 px-4 rounded-lg shadow-md transition-all ease-in-out;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+:root {
+  --background: #f9fafb;
+  --foreground: #111827;
+  --border-color: #e5e7eb;
+
+  /* Custom colors */
+  --primary-bg: #4b8bf4; /* Primary background color */
+  --secondary-bg: #ff6347; /* Secondary background color */
+  --alert-bg: #fffbf2; /* Alert background */
+  --alert-border: #ffeb3b; /* Alert border color */
+  --alert-text: #f57c00; /* Alert text color */
+  --error-bg: #ffebee; /* Error background */
+  --error-text: #d32f2f; /* Error text color */
+}
+
+@layer base {
+  body {
+    font-family: "Inter", sans-serif;
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  input,
+  textarea,
+  select,
+  button {
+    border-color: var(--border-color);
+    color: var(--foreground);
+  }
 }

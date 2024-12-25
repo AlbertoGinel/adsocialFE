@@ -112,43 +112,72 @@ const InfluencerElement: React.FC<InfluencerElementProps> = ({
     }
   };
 
-  // Check if the form is valid
   const isFormValid =
+    newAccount.social_network.trim() !== "" &&
     newAccount.title.trim() !== "" &&
     newAccount.username.trim() !== "" &&
     isValidURL(newAccount.account_url);
 
   return (
-    <div key={influencer.id} className="bg-white p-6 rounded-lg shadow-md">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-gray-800">
-          {influencer.first_name} {influencer.last_name}
-        </h2>
-        <div className="flex items-center">
-          <select
-            id={`manager-select-${influencer.id}`}
-            value={influencer.manager || ""}
-            className="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-lg text-blue-600 font-semibold"
-            onChange={handleManagerChange}
+    <div
+      key={influencer.id}
+      className="bg-white p-6 rounded-lg shadow-md"
+      style={{
+        fontFamily: "var(--font-family-sans)", // Link to the font family defined in globals.css
+        backgroundColor: "var(--background)", // Use the background color from globals
+        color: "var(--foreground)", // Use the foreground text color from globals
+      }}
+    >
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div>
+          <h2
+            className="text-xl font-semibold"
+            style={{
+              color: "var(--foreground)", // Link text color to global foreground
+            }}
           >
-            <option value="">No manager</option>{" "}
-            {managers.map((manager) => (
-              <option key={manager.id} value={manager.id}>
-                {manager.first_name} {manager.last_name}
-              </option>
-            ))}
-          </select>
+            {influencer.first_name} {influencer.last_name}
+          </h2>
+        </div>
 
-          <button
-            className="text-blue-500"
-            onClick={() =>
-              setOpenAccountForm(
-                openAccountForm === influencer.id ? null : influencer.id
-              )
-            }
-          >
-            Add New Account
-          </button>
+        <div className="flex justify-between items-center gap-4 w-full">
+          {/* First div (3/4 of the space) */}
+          <div className="w-2/4">
+            <label
+              htmlFor={`manager-select-${influencer.id}`}
+              className="block text-sm font-medium"
+              style={{ color: "var(--foreground)" }}
+            >
+              Manager
+            </label>
+            <select
+              id={`manager-select-${influencer.id}`}
+              value={influencer.manager || ""}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-lg"
+              onChange={handleManagerChange}
+            >
+              <option value="">No manager</option>
+              {managers.map((manager) => (
+                <option key={manager.id} value={manager.id}>
+                  {manager.first_name} {manager.last_name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Second div (1/4 of the space) */}
+          <div className="w-2/4">
+            <button
+              className="w-full px-4 py-2 bg-primary text-white font-semibold rounded-md shadow-md hover:bg-primary-dark"
+              onClick={() =>
+                setOpenAccountForm(
+                  openAccountForm === influencer.id ? null : influencer.id
+                )
+              }
+            >
+              Add New Account
+            </button>
+          </div>
         </div>
       </div>
 
@@ -217,7 +246,7 @@ const InfluencerElement: React.FC<InfluencerElementProps> = ({
             <button
               className={`py-2 px-4 rounded ${
                 isFormValid
-                  ? "bg-blue-500 text-white"
+                  ? "bg-primary text-white"
                   : "bg-gray-300 text-gray-800 cursor-not-allowed"
               }`}
               disabled={!isFormValid}

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import InfluencerElement from "../components/influencer_element";
 import { useCreateTransition } from "../_lib/stores/createTransitionStateStore";
+import { useRouter } from "next/navigation";
 
 type SocialMediaAccount = {
   id: number;
@@ -32,7 +33,7 @@ type Manager = {
 const ListInfluencer = () => {
   const { transitionPayload, resetTransitionPayload } = useCreateTransition();
   const [influencers, setInfluencers] = useState<Influencer[]>([]);
-  const [managers, setManagers] = useState<Manager[]>([]); // Add state for managers
+  const [managers, setManagers] = useState<Manager[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [openAccountForm, setOpenAccountForm] = useState<number | null>(null);
@@ -48,6 +49,8 @@ const ListInfluencer = () => {
     last_name: "",
     manager: null as number | null,
   });
+
+  const router = useRouter();
 
   useEffect(() => {
     fetchManagers();
@@ -126,7 +129,7 @@ const ListInfluencer = () => {
 
   const handleAddAccount = async (influencerId: number) => {
     const randomFollowers =
-      Math.floor(Math.random() * (90000 - 1000 + 1)) + 1000; // Generate random followers
+      Math.floor(Math.random() * (90000 - 1000 + 1)) + 1000;
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const response = await fetch(`${apiUrl}/api/social-media-accounts/`, {
       method: "POST",
@@ -161,7 +164,7 @@ const ListInfluencer = () => {
       resetNewAccount();
       setOpenAccountForm(null);
     } else {
-      setWarningMessage("Failed to add social media account."); // Set the warning message
+      setWarningMessage("Failed to add social media account.");
       setTimeout(() => setWarningMessage(""), 4000);
     }
   };
@@ -249,111 +252,151 @@ const ListInfluencer = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 flex flex-col items-center">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">
+    <div
+      className="min-h-screen p-4 flex flex-col items-center"
+      style={{
+        backgroundColor: "var(--background)",
+        color: "var(--foreground)",
+      }}
+    >
+      <div className="w-full max-w-4xl flex justify-end mb-6">
+        <button
+          onClick={() => router.push("/createInfluencer")}
+          className="px-4 py-2 bg-primary text-white font-semibold rounded-md shadow-md hover:bg-primary-dark"
+        >
+          Create Influencer
+        </button>
+      </div>
+
+      <h1
+        className="text-3xl font-bold mb-6"
+        style={{ color: "var(--foreground)" }}
+      >
         List of Influencers
       </h1>
 
-      {/* Warning Message */}
       {warningMessage && (
-        <div className="w-full max-w-4xl bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
+        <div
+          className="w-full max-w-4xl p-4 mb-4"
+          style={{
+            backgroundColor: "var(--alert-bg)",
+            borderLeft: "4px solid var(--alert-border)",
+            color: "var(--alert-text)",
+          }}
+        >
           {warningMessage}
         </div>
       )}
 
-      <div className="w-full max-w-4xl bg-white shadow-md rounded-lg p-4 mb-6 flex flex-wrap gap-4 items-center">
-        {/* Manager Dropdown */}
-        <div className="flex-1">
-          <label
-            htmlFor="filter-manager"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Manager
-          </label>
-          <select
-            id="filter-manager"
-            className="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-lg text-blue-600 font-semibold"
-            value={filters.manager ?? ""} // Convert null to an empty string
-            onChange={
-              (e) =>
+      <div
+        className="w-full max-w-4xl shadow-md rounded-lg p-4 mb-6 flex flex-col gap-4"
+        style={{
+          backgroundColor: "white",
+          borderColor: "var(--border-color)",
+        }}
+      >
+        <div className="flex gap-4 w-full">
+          <div className="flex-1">
+            <label
+              htmlFor="filter-first-name"
+              className="block text-sm font-medium"
+              style={{ color: "var(--foreground)" }}
+            >
+              First Name
+            </label>
+            <input
+              id="filter-first-name"
+              type="text"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+              placeholder="Enter first name"
+              value={filters.first_name}
+              onChange={(e) =>
+                setFilters({ ...filters, first_name: e.target.value })
+              }
+            />
+          </div>
+
+          <div className="flex-1">
+            <label
+              htmlFor="filter-last-name"
+              className="block text-sm font-medium"
+              style={{ color: "var(--foreground)" }}
+            >
+              Last Name
+            </label>
+            <input
+              id="filter-last-name"
+              type="text"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+              placeholder="Enter last name"
+              value={filters.last_name}
+              onChange={(e) =>
+                setFilters({ ...filters, last_name: e.target.value })
+              }
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-4 w-full">
+          {/* Manager Filter */}
+          <div className="flex-1">
+            <label
+              htmlFor="filter-manager"
+              className="block text-sm font-medium"
+              style={{ color: "var(--foreground)" }}
+            >
+              Manager
+            </label>
+            <select
+              id="filter-manager"
+              className="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-lg"
+              value={filters.manager ?? ""}
+              onChange={(e) =>
                 setFilters({
                   ...filters,
                   manager: e.target.value ? Number(e.target.value) : null,
-                }) // Convert empty string back to null
-            }
-          >
-            <option value="">No manager selected</option>
-            {managers.map((manager) => (
-              <option key={manager.id} value={manager.id}>
-                {manager.first_name} {manager.last_name}
-              </option>
-            ))}
-          </select>
-        </div>
+                })
+              }
+            >
+              <option value="">No manager selected</option>
+              {managers.map((manager) => (
+                <option key={manager.id} value={manager.id}>
+                  {manager.first_name} {manager.last_name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        {/* First Name Input */}
-        <div className="flex-1">
-          <label
-            htmlFor="filter-first-name"
-            className="block text-sm font-medium text-gray-700"
-          >
-            First Name
-          </label>
-          <input
-            id="filter-first-name"
-            type="text"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            placeholder="Enter first name"
-            value={filters.first_name}
-            onChange={(e) =>
-              setFilters({ ...filters, first_name: e.target.value })
-            }
-          />
-        </div>
-
-        {/* Last Name Input */}
-        <div className="flex-1">
-          <label
-            htmlFor="filter-last-name"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Last Name
-          </label>
-          <input
-            id="filter-last-name"
-            type="text"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            placeholder="Enter last name"
-            value={filters.last_name}
-            onChange={(e) =>
-              setFilters({ ...filters, last_name: e.target.value })
-            }
-          />
-        </div>
-
-        {/* Buttons */}
-        <div className="flex gap-4">
-          <button
-            className="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-md shadow-md hover:bg-indigo-700"
-            onClick={handleFilter}
-          >
-            Filter
-          </button>
-          <button
-            className="px-4 py-2 bg-gray-300 text-gray-700 font-semibold rounded-md shadow-md hover:bg-gray-400"
-            onClick={handleClear}
-          >
-            Clear
-          </button>
+          {/* Filter and Clear Buttons */}
+          <div className="flex-1 flex gap-4">
+            <button
+              className="flex-1 px-4 py-2 bg-primary text-white font-semibold rounded-md shadow-md hover:bg-primary-dark"
+              onClick={handleFilter}
+            >
+              Filter
+            </button>
+            <button
+              className="flex-1 px-4 py-2 bg-secondary text-white font-semibold rounded-md shadow-md hover:bg-secondary-dark"
+              onClick={handleClear}
+            >
+              Clear
+            </button>
+          </div>
         </div>
       </div>
 
       {loading ? (
-        <p className="text-lg text-gray-600">Loading...</p>
+        <p className="text-lg" style={{ color: "var(--foreground)" }}>
+          Loading...
+        </p>
       ) : error ? (
-        <p className="text-lg text-red-600">{error}</p>
+        <p className="text-lg" style={{ color: "var(--error-text)" }}>
+          {error}
+        </p>
       ) : influencers.length === 0 ? (
-        <p className="text-lg text-gray-600">No influencers found.</p>
+        <p className="text-lg" style={{ color: "var(--foreground)" }}>
+          No influencers found.
+        </p>
       ) : (
         <div className="w-full max-w-4xl space-y-6">
           {influencers.map((influencer) => (
